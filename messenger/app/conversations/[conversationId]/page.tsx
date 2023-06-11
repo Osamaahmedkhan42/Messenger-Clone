@@ -4,8 +4,8 @@ import getConversationById from "@/app/actions/getConversationById";
 import EmptyState from "@/app/components/EmptyState";
 
 import Header from "./components/Header";
-// import Body from "./components/Body";
-// import Form from "./components/Form";
+import Body from "./components/Body";
+import Form from "./components/Form";
 
 
 interface IParams {
@@ -29,8 +29,9 @@ const ChatId = async ({ params }: { params: IParams }) => {
         <div className="lg:pl-80 h-full">
             <div className="h-full flex flex-col">
                 <Header conversation={conversation} />
-                {/* <Body initialMessages={messages} />
-                <Form /> */}
+                <Body />
+                {/* <Body initialMessages={messages} /> */}
+                <Form />
             </div>
         </div>
     );
