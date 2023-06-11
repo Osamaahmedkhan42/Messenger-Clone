@@ -5,6 +5,7 @@ import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Conversation, User } from "@prisma/client";
+import ProfileDrawer from './ProfileDrawer';
 
 import useOtherUser from "@/app/hooks/useOtherUser";
 //import useActiveList from "@/app/hooks/useActiveList";
@@ -36,11 +37,11 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
 
     return (
         <>
-            {/* <ProfileDrawer
+            <ProfileDrawer
                 data={conversation}
                 isOpen={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
-            /> */}
+            />
             <div
                 className="
         bg-white 
