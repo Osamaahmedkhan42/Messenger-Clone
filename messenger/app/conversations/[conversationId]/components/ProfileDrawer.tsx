@@ -9,11 +9,11 @@ import ConfirmModal from './ConfirmModal';
 
 
 import useOtherUser from '@/app/hooks/useOtherUser';
-//mport useActiveList from '@/app/hooks/useActiveList';
+import useActiveList from '@/app/hooks/useActiveList';
 
 import Avatar from '@/app/components/Avatar';
 import AvatarGroup from '@/app/components/AvatarGroup';
-//import ConfirmModal from './ConfirmModal';
+
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -40,18 +40,18 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         return data.name || otherUser.name;
     }, [data.name, otherUser.name]);
 
-    // const { members } = useActiveList();
-    // const isActive = members.indexOf(otherUser?.email!) !== -1;
+    const { members } = useActiveList();
+    const isActive = members.indexOf(otherUser?.email!) !== -1;
 
     const statusText = useMemo(() => {
         if (data.isGroup) {
             return `${data.users.length} members`;
         }
 
-        return 'Active'
-        //return isActive ? 'Active' : 'Offline'
-    }, [data])
-    // }, [data, isActive]);
+
+        return isActive ? 'Active' : 'Offline'
+        // }, [data])
+    }, [data, isActive]);
 
     return (
         <>

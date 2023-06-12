@@ -2,7 +2,8 @@
 
 
 import { FullConversationType } from "@/app/types";
-import { useState } from "react"
+import { useState, useMemo, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import { MdOutlineGroupAdd } from 'react-icons/md';
 import useConversation from "@/app/hooks/useConversation";
@@ -10,6 +11,8 @@ import clsx from "clsx";
 import ConversationBox from "./ConversationBox";
 import GroupChatModal from "@/app/components/modals/GroupChatModal";
 import { User } from "@prisma/client";
+import { pusherClient } from "@/app/lib/pusher";
+import { find } from "lodash";
 
 interface ConversationListProps {
     initialItems: FullConversationType[];
@@ -22,7 +25,58 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const router = useRouter();
+    const session = useSession();
     const { conversationId, isOpen } = useConversation();
+
+
+    //
+    const pusherKey = useMemo(() => {
+        return session.data?.user?.email
+    }, [session.data?.user?.email])
+
+    useEffect(() => {
+        if (!pusherKey) {
+            return;
+        }
+
+        pusherClient.subscribe(pusherKey);
+
+        const updateHandler = (conversation: FullConversationType) => {
+            setItems((current) => current.map((currentConversation) => {
+                if (currentConversation.id === conversation.id) {
+                    return {
+                        ...currentConversation,
+                        messages: conversation.messages
+                    };
+                }
+
+                return currentConversation;
+            }));
+        }
+
+        const newHandler = (conversation: FullConversationType) => {
+            setItems((current) => {
+                if (find(current, { id: conversation.id })) {
+                    return current;
+                }
+
+                return [conversation, ...current]
+            });
+        }
+
+        const removeHandler = (conversation: FullConversationType) => {
+            setItems((current) => {
+                return [...current.filter((convo) => convo.id !== conversation.id)]
+            });
+        }
+
+        pusherClient.bind('conversation:update', updateHandler)
+        pusherClient.bind('conversation:new', newHandler)
+        pusherClient.bind('conversation:remove', removeHandler)
+    }, [pusherKey, router]);
+    //
+
+
     return <>
         <GroupChatModal
             users={users}
