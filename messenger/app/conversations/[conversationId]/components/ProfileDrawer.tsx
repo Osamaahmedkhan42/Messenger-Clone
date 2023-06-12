@@ -5,12 +5,14 @@ import { Dialog, Transition } from '@headlessui/react'
 import { IoClose, IoTrash } from 'react-icons/io5'
 import { Conversation, User } from '@prisma/client';
 import { format } from 'date-fns';
+import ConfirmModal from './ConfirmModal';
+
 
 import useOtherUser from '@/app/hooks/useOtherUser';
 //mport useActiveList from '@/app/hooks/useActiveList';
 
 import Avatar from '@/app/components/Avatar';
-//import AvatarGroup from '@/app/components/AvatarGroup';
+import AvatarGroup from '@/app/components/AvatarGroup';
 //import ConfirmModal from './ConfirmModal';
 
 interface ProfileDrawerProps {
@@ -28,6 +30,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const otherUser = useOtherUser(data);
+
 
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP');
@@ -52,10 +55,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
     return (
         <>
-            {/* <ConfirmModal
+
+            <ConfirmModal
                 isOpen={confirmOpen}
                 onClose={() => setConfirmOpen(false)}
-            /> */}
+            />
             <Transition.Root show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-50" onClose={onClose}>
                     <Transition.Child
@@ -101,8 +105,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                             <div className="relative mt-6 flex-1 px-4 sm:px-6">
                                                 <div className="flex flex-col items-center">
                                                     <div className="mb-2">
-                                                        <Avatar user={otherUser} />
-                                                        {/* {data.isGroup ? <AvatarGroup users={data.users} /> : <Avatar user={otherUser} />} */}
+
+                                                        {data.isGroup ? <AvatarGroup users={data.users} /> : <Avatar user={otherUser} />}
                                                     </div>
                                                     <div>
                                                         {title}

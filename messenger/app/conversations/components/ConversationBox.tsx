@@ -8,6 +8,7 @@ import { format } from "date-fns"
 import useOtherUser from "@/app/hooks/useOtherUser";
 import { useRouter } from "next/navigation";
 import Avatar from "@/app/components/Avatar";
+import AvatarGroup from "@/app/components/AvatarGroup";
 
 
 interface ConversationBoxProps {
@@ -91,12 +92,12 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
             )}
         >
 
-            <Avatar user={otherUser} />
-            {/* {data.isGroup ? (
+
+            {data.isGroup ? (
                 <AvatarGroup users={data.users} />
             ) : (
                 <Avatar user={otherUser} />
-            )} */}
+            )}
             <div className="min-w-0 flex-1">
                 <div className="focus:outline-none">
                     <span className="absolute inset-0" aria-hidden="true" />
